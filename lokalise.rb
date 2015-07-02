@@ -114,14 +114,14 @@ module Player
     ######################################################################
 
     def do_strip
-      if self.strip
-        @output_files.each { |output_file|
-          find_and_replace output_file, /^.+""$\n/, ''
-        }
-      end
+      return if !self.strip
+      @output_files.each { |output_file|
+        find_and_replace output_file, /^.+""$\n/, ''
+      }
     end
 
     def do_language_fallback
+      return if !self.language_fallback
       languages = Set.new
       languages_with_dialects = Set.new
       dialect_files_by_language = {} # for now we'll just use one of each
