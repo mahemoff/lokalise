@@ -31,6 +31,7 @@ module Player
     property :output_format, default: :yml
     property :allow_overwrite
     property :strip
+    property :language_fallback
 
     def initialize(options)
       super(options)
@@ -45,6 +46,7 @@ module Player
       unzip
       # post-process
       do_strip
+      do_language_fallback
     end
 
     private
@@ -119,6 +121,31 @@ module Player
       end
     end
 
+    def do_language_fallback
+      languages = Set.new
+      languages_with_dialects = Set.new
+      dialect_files_by_language = {} # for now we'll just use one of each
+      language_files_by_language = {} # for now we'll just use one of each
+      @output_files.each { |output_file|
+        if output_file =~ /\.([a-z][a-z])_.*\./
+          languages_with_dialects << $1
+          dialect_files_by_language[$1] = output_file
+        elsif output_file =~ /\.([a-z][a-z])\./
+          languages << $1
+        end
+        #find_and_replace output_file, /^.+""$\n/, ''
+      }
+      languages_with_only_dialects = languages_with_dialects - languages
+      languages_with_only_dialects.each { |language|
+        dialect_file = dialect_files_by_language[language]
+        language_file = dialect_file.gsub /(\.[a-z][a-z])_.*(\..+)$/, "\\1\\2"
+        FileUtils.cp dialect_file, language_file
+        if dialect_file =~ /\.([a-z][a-z])/
+          find_and_replace language_file, /^\S+$/, "#{language}:" # just first line
+        end
+      }
+    end
+
     ######################################################################
     # HELPERS
     ######################################################################
@@ -154,6 +181,7 @@ END
     o.string '-f', '--format', 'output format (default: yml)', default: :yml
     o.string '-o', '--output-folder', 'output folder (default: current folder; will be created if doesn''t exist)'
     o.boolean '-s', '--strip', 'strip out entries with empty string value'
+    o.boolean '-l', '--language-fallback', 'ensure non-dialect fallback exists for all dialects'
     o.on '-h', '--help', 'help' do ; puts opts && exit ; end
   end
   ARGV.replace opts.arguments
@@ -163,6 +191,7 @@ END
       output_format: opts[:format],
       output_folder: opts['output-folder'],
       strip: opts['strip'],
+      language_fallback: opts['language-fallback'],
       allow_overwrite: true
     ).download project_id
   else
