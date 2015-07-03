@@ -60,7 +60,7 @@ module Player
       body = URI.encode_www_form(
           id: project_id,
           api_token: lokalise_api_token,
-          export_all: 0,
+          export_all: 1,
           type: self.output_format,
           use_original: '0',
           filter: 'translated',
