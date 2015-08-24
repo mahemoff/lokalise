@@ -32,6 +32,8 @@ module Player
     property :allow_overwrite
     property :strip
     property :language_fallback
+    property :quiet
+    property :verbose
 
     def initialize(options)
       super(options)
@@ -47,6 +49,7 @@ module Player
       # post-process
       do_strip
       do_language_fallback
+      output_files
     end
 
     private
@@ -146,6 +149,10 @@ module Player
       }
     end
 
+    def output_files
+      puts @output_files.join(' ') unless quiet
+    end
+
     ######################################################################
     # HELPERS
     ######################################################################
@@ -156,7 +163,7 @@ module Player
     end
     
     def log(s)
-      puts s
+      puts s if self.verbose
     end
 
     def error_log(s)
@@ -182,6 +189,8 @@ END
     o.string '-o', '--output-folder', 'output folder (default: current folder; will be created if doesn''t exist)'
     o.boolean '-s', '--strip', 'strip out entries with empty string value'
     o.boolean '-l', '--language-fallback', 'ensure non-dialect fallback exists for all dialects'
+    o.boolean '-v', '--verbose', 'add logging'
+    o.boolean '-q', '--quiet', 'no output - suppress showing new files'
     o.on '-h', '--help', 'help' do ; puts opts && exit ; end
   end
   ARGV.replace opts.arguments
@@ -192,6 +201,8 @@ END
       output_folder: opts['output-folder'],
       strip: opts['strip'],
       language_fallback: opts['language-fallback'],
+      verbose: opts['verbose'],
+      quiet: opts['quiet'],
       allow_overwrite: true
     ).download project_id
   else
