@@ -128,13 +128,17 @@ module Player
       languages = Set.new
       languages_with_dialects = Set.new
       dialect_files_by_language = {} # for now we'll just use one of each
-      language_files_by_language = {} # for now we'll just use one of each
       @output_files.each { |output_file|
         if output_file =~ /\.([a-z][a-z])_.*\./
-          languages_with_dialects << $1
-          dialect_files_by_language[$1] = output_file
+          lang = $1
+          languages_with_dialects << lang
+          current_dialect_file = dialect_files_by_language[lang]
+          if !current_dialect_file || File.size(output_file) > File.size(current_dialect_file)
+            dialect_files_by_language[lang] = output_file
+          end
         elsif output_file =~ /\.([a-z][a-z])\./
-          languages << $1
+          lang = $1
+          languages << lang
         end
         #find_and_replace output_file, /^.+""$\n/, ''
       }
