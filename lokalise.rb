@@ -147,8 +147,8 @@ module Player
         dialect_file = dialect_files_by_language[language]
         language_file = dialect_file.gsub /(\.[a-z][a-z])_.*(\..+)$/, "\\1\\2"
         FileUtils.cp dialect_file, language_file
-        if dialect_file =~ /\.([a-z][a-z])/
-          find_and_replace language_file, /^\S+$/, "#{language}:" # just first line
+        if dialect_file =~ /\.([a-z][a-z])/ && self.output_format.to_s=='yml' 
+          find_and_replace language_file, /^\A\S+$/, "#{language}:" # strip dialect string inside file
         end
       }
     end
