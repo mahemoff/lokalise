@@ -120,6 +120,10 @@ module Player
       return if !self.strip
       @output_files.each { |output_file|
         find_and_replace output_file, /^.+""$\n/, ''
+        # for xml, strip out "plurals" if all are empty
+        if self.output_format.to_s=='xml'
+          find_and_replace output_file, /<plurals name="[a-zA-Z_]+">[\n\r\t ]+(<item quantity="[a-zA-Z_]+"><\/item>[\n\r\t ]+)+<\/plurals>/m, ''
+        end
       }
     end
 
