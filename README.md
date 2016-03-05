@@ -3,7 +3,6 @@
 Download your translation files from the [Lokalise](https://lokali.se) translation service.
 
 ```
-
 # Call with no argument for help
 > lokalise
 
@@ -19,11 +18,12 @@ Options:
   -v, --verbose            add logging
   -q, --quiet              no output - suppress showing new files
   -h, --help               help
+```
 
-# Contributions
+## Contributions
 
 Are welcome. Especially test cases.
 
-# Legal
+## Legal
 
 Please note this is an unofficial client library, creators are not affiliated with the Lokalise service. [License info](LICENSE.md).
