@@ -57,7 +57,7 @@ module Player
     ######################################################################
     # SAVE
     ######################################################################
-    
+
     def request_zip_from_lokalize(project_id)
       headers = { "Content-Type" => "application/x-www-form-urlencoded" }
       body = URI.encode_www_form(
@@ -151,7 +151,7 @@ module Player
         dialect_file = dialect_files_by_language[language]
         language_file = dialect_file.gsub /(\.[a-z][a-z])_.*(\..+)$/, "\\1\\2"
         FileUtils.cp dialect_file, language_file
-        if dialect_file =~ /\.([a-z][a-z])/ && self.output_format.to_s=='yml' 
+        if dialect_file =~ /\.([a-z][a-z])/ && self.output_format.to_s=='yml'
           find_and_replace language_file, /^\A\S+$/, "#{language}:" # strip dialect string inside file
         end
       }
@@ -169,7 +169,7 @@ module Player
       content = File.read(file).gsub(pattern, replacement)
       File.open(file, "w") { |file| file.puts content }
     end
-    
+
     def log(s)
       puts s if self.verbose
     end
