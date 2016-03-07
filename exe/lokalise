@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require "lokalise"
+
+opts = Slop.parse do |o|
+  o.banner = <<DESC.chop
+lokalise.rb [options] project_id
+e.g.: lokalize.rb --token aab14314 -output-folder=translations 1234567e0.0129
+
+Download string files from Lokalize projects, for more information
+DESC
+  o.string '-t', '--token', 'API token (default: LOKALISE_API_TOKEN env variable; from: https://lokali.se/en/account)'
+  o.string '-f', '--format', 'output format (default: yml)', default: :yml
+  o.string '-o', '--output-folder', 'output folder (default: current folder; will be created if doesn''t exist)'
+  o.string '-st', '--structure', 'output structure (default: \'%PROJECT_NAME%.%LANG_ISO%.%FORMAT%\')'
+  o.boolean '-s', '--strip', 'strip out entries with empty string value'
+  o.boolean '-l', '--language-fallback', 'ensure non-dialect fallback exists for all dialects'
+  o.boolean '-v', '--verbose', 'add logging'
+  o.boolean '-q', '--quiet', 'no output - suppress showing new files'
+  o.on '-h', '--help', 'help' do ; puts opts && exit ; end
+end
+
+ARGV.replace opts.arguments
+if project_id = ARGV[0]
+  Lokalise::Pull.new(
+    lokalise_api_token: opts[:token],
+    output_format: opts[:format],
+    output_folder: opts['output-folder'],
+    structure: opts['structure'],
+    strip: opts['strip'],
+    language_fallback: opts['language-fallback'],
+    verbose: opts['verbose'],
+    quiet: opts['quiet'],
+    allow_overwrite: true
+  ).download project_id
+else
+  puts(opts)
+end

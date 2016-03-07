@@ -1,7 +1,7 @@
-#!/usr/bin/env ruby
+require "lokalise/version"
 
 # CODE USAGE
-#   Player::Lokalise.new(options).download project_id
+#   Lokalise::Pull.new(options).download project_id
 #   See "property" declarations below for the available options
 #
 # COMMAND-LINE USAGE
@@ -11,14 +11,14 @@
 #
 # (This should become a gem later on)
 
-%w(rubygems excon hashie json fileutils zip slop byebug).each { |gem| require gem }
+%w(rubygems excon hashie json zip slop byebug).each { |gem| require gem }
 
 ######################################################################
 # USING FROM COMMAND LINE
 ######################################################################
 
-module Player
-  class Lokalise < Hashie::Dash
+module Lokalise
+  class Pull < Hashie::Dash
 
     ZIP_FILE = '/tmp/lokalise.zip'
 
@@ -29,6 +29,7 @@ module Player
     property :lokalise_api_token # Get this from https://lokali.se/en/account
     property :output_folder
     property :output_format, default: :yml
+    property :structure, default: '%PROJECT_NAME%.%LANG_ISO%.%FORMAT%'
     property :allow_overwrite
     property :strip
     property :language_fallback
@@ -68,7 +69,7 @@ module Player
           use_original: '0',
           filter: 'translated',
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
-          bundle_structure: '%PROJECT_NAME%.%LANG_ISO%.%FORMAT%'
+          bundle_structure: self.structure
       )
       response = Excon.post 'https://lokali.se/api/project/export', headers: headers, body: body
       if response.status==200
@@ -93,7 +94,7 @@ module Player
 
     def unzip
       if self.output_folder
-        FileUtils.mkdir self.output_folder if !File.directory?(self.output_folder)
+        `mkdir #{self.output_folder}` if !File.directory?(self.output_folder)
         Dir.chdir self.output_folder
       end
       #args = ['-qq']
@@ -103,11 +104,10 @@ module Player
       @output_files = []
       Zip::File.open(ZIP_FILE) do |file|
         file.each do |entry|
-          if entry.name!='./'
-            FileUtils.rm(entry.name) if self.allow_overwrite && File.exists?(entry.name)
-            entry.extract("#{entry.name}")
-            @output_files << entry.name
-          end
+          next if entry.name == './'
+          `rm #{entry.name}` if self.allow_overwrite && File.exists?(entry.name)
+          entry.extract("#{entry.name}")
+          @output_files << entry.name
         end
       end
     end
@@ -150,7 +150,7 @@ module Player
       languages_with_only_dialects.each { |language|
         dialect_file = dialect_files_by_language[language]
         language_file = dialect_file.gsub /(\.[a-z][a-z])_.*(\..+)$/, "\\1\\2"
-        FileUtils.cp dialect_file, language_file
+        `cp #{dialect_file} #{language_file}`
         if dialect_file =~ /\.([a-z][a-z])/ && self.output_format.to_s=='yml'
           find_and_replace language_file, /^\A\S+$/, "#{language}:" # strip dialect string inside file
         end
@@ -177,43 +177,5 @@ module Player
     def error_log(s)
       puts "ERROR: #{s}"
     end
-
-  end
-end
-
-######################################################################
-# USING FROM COMMAND LINE
-######################################################################
-
-if __FILE__==$0
-  opts = Slop.parse do |o|
-    o.banner = <<END.chop
-lokalise.rb [options] project_id
-e.g.: lokalize.rb --token aab14314 -output-folder=translations 1234567e0.0129
-Download string files from Lokalize projects
-END
-    o.string '-t', '--token', 'API token (default: LOKALISE_API_TOKEN env variable)'
-    o.string '-f', '--format', 'output format (default: yml)', default: :yml
-    o.string '-o', '--output-folder', 'output folder (default: current folder; will be created if doesn''t exist)'
-    o.boolean '-s', '--strip', 'strip out entries with empty string value'
-    o.boolean '-l', '--language-fallback', 'ensure non-dialect fallback exists for all dialects'
-    o.boolean '-v', '--verbose', 'add logging'
-    o.boolean '-q', '--quiet', 'no output - suppress showing new files'
-    o.on '-h', '--help', 'help' do ; puts opts && exit ; end
-  end
-  ARGV.replace opts.arguments
-  if project_id = ARGV[0]
-    Player::Lokalise.new(
-      lokalise_api_token: opts[:token],
-      output_format: opts[:format],
-      output_folder: opts['output-folder'],
-      strip: opts['strip'],
-      language_fallback: opts['language-fallback'],
-      verbose: opts['verbose'],
-      quiet: opts['quiet'],
-      allow_overwrite: true
-    ).download project_id
-  else
-    puts(opts)
   end
 end
