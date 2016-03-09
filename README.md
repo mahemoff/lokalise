@@ -57,10 +57,7 @@ release a new version, update the version number in `version.rb`, and then run
 git commits and tags, and push the `.gem` file to
 [rubygems.org](https://rubygems.org).
 
-## Contributing
-
-Are welcome. Especially test cases.
-
+Contributions are welcome. Especially test cases right now.
 
 ## License
 
