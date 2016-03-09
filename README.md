@@ -1,15 +1,10 @@
 # Lokalise
 
 Download your translation files from the [Lokalise](https://lokali.se)
-translation service.
+translation service. Use as a command-line tool (e.g. from a Bash script) or as
+a Ruby class.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'lokalise'
-```
 
 And then execute:
 
@@ -19,7 +14,7 @@ Or install it yourself as:
 
     $ gem install lokalise
 
-## Usage
+## Command-line usage
 
 ```
 # Call with no argument for help
@@ -43,6 +38,22 @@ Options:
 -q, --quiet              no output - suppress showing new files
 -h, --help               help
 ```
+
+## Ruby usage
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'lokalise'
+```
+
+```ruby
+Lokalise::Pull.new(lokalise_api_token: aab14314).download 1234567e0.0129
+```
+
+The argument here, `1234567e0.0129`, is your project ID. You may specify
+additional options in the constructor (see properties in lokalise.rb for more
+options).
 
 ## Development
 
