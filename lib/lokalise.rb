@@ -133,32 +133,34 @@ module Lokalise
       languages_with_dialects = Set.new
       dialect_files_by_language = {} # for now we'll just use one of each
       @output_files.each { |output_file|
-        if output_file =~ /\.([a-z][a-z])_.*\./
+        if File.basename(output_file) =~ /\A([a-z][a-z])_.*\./
           lang = $1
           languages_with_dialects << lang
           current_dialect_file = dialect_files_by_language[lang]
           if !current_dialect_file || File.size(output_file) > File.size(current_dialect_file)
             dialect_files_by_language[lang] = output_file
           end
-        elsif output_file =~ /\.([a-z][a-z])\./
+        elsif File.basename(output_file) =~ /\A([a-z][a-z])\./
           lang = $1
           languages << lang
         end
         #find_and_replace output_file, /^.+""$\n/, ''
       }
       languages_with_only_dialects = languages_with_dialects - languages
+      @language_fallback_files = []
       languages_with_only_dialects.each { |language|
         dialect_file = dialect_files_by_language[language]
-        language_file = dialect_file.gsub /(\.[a-z][a-z])_.*(\..+)$/, "\\1\\2"
+        language_file = dialect_file.gsub /([a-z][a-z])_.*(\..+)$/, "\\1\\2"
         `cp #{dialect_file} #{language_file}`
-        if dialect_file =~ /\.([a-z][a-z])/ && self.output_format.to_s=='yml'
+        @language_fallback_files << language_file
+        if dialect_file =~ /([a-z][a-z])/ && self.output_format.to_s=='yml'
           find_and_replace language_file, /^\A\S+$/, "#{language}:" # strip dialect string inside file
         end
       }
     end
 
     def output_files
-      puts @output_files.join(' ') unless quiet
+      puts [@output_files+(@language_fallback_files||[])].join(' ') unless quiet
     end
 
     ######################################################################
