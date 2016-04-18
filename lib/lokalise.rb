@@ -37,12 +37,13 @@ module Lokalise
     property :verbose
 
     def initialize(options)
-      super(options)
-      self.lokalise_api_token ||= ENV['LOKALISE_API_TOKEN']
+      options[:lokalise_api_token] ||= ENV['LOKALISE_API_TOKEN']
+      super options
       raise "Need Lokalise token passed in or as an environment variable" if !lokalise_api_token
     end
 
     def download(project_id)
+      log "Fetching project #{project_id}"
       # save
       request_zip_from_lokalize project_id
       download_zip
@@ -71,7 +72,14 @@ module Lokalise
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
           bundle_structure: self.structure
       )
-      response = Excon.post 'https://lokali.se/api/project/export', headers: headers, body: body
+
+      fetch_start = Time.now
+      response = Excon.post 'https://lokali.se/api/project/export',
+        headers: headers,
+        body: body,
+        read_timeout: 600
+      log "Fetched in #{(Time.now - fetch_start).round(1)}s"
+
       if response.status==200
         result = Hashie::Mash.new JSON.parse(response.body)
         log "Result: #{result.pretty_inspect}"
