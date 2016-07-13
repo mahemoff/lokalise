@@ -26,7 +26,7 @@ module Lokalise
     # PUBLIC INTERFACE
     ######################################################################
 
-    property :lokalise_api_token # Get this from https://lokali.se/en/account
+    property :lokalise_api_token # Get this from https://lokalise.co/en/account
     property :output_folder
     property :output_format, default: :yml
     property :structure, default: '%PROJECT_NAME%.%LANG_ISO%.%FORMAT%'
@@ -74,7 +74,7 @@ module Lokalise
       )
 
       fetch_start = Time.now
-      response = Excon.post 'https://lokali.se/api/project/export',
+      response = Excon.post 'https://lokalise.co/api/project/export',
         headers: headers,
         body: body,
         read_timeout: 600
@@ -95,7 +95,7 @@ module Lokalise
     end
 
     def download_zip
-      zip_url_on_server = "https://lokali.se/#{@zip_path_on_server}"
+      zip_url_on_server = "https://lokalise.co/#{@zip_path_on_server}"
       log "Downloading zip file from #{zip_url_on_server}"
       `curl --silent #{zip_url_on_server} > #{ZIP_FILE}`
     end

@@ -1,6 +1,6 @@
 # Lokalise
 
-Download your translation files from the [Lokalise](https://lokali.se)
+Download your translation files from the [Lokalise](https://lokalise.co)
 translation service. Use as a command-line tool (e.g. from a Bash script) or as
 a Ruby class.
 
@@ -21,12 +21,12 @@ Or install it yourself as:
 > bundle exec lokalise
 
 # Typical usage - mandatory project ID and auth token (which can also be in
-  environment variable; get your token from https://lokali.se/account)
+  environment variable; get your token from https://lokalise.co/account)
 > bundle exec lokalize --token aab14314 1234567e0.0129
 
 Options:
 -t, --token              API token (default: LOKALISE_API_TOKEN env variable; from:
-                         https://lokali.se/en/account)
+                         https://lokalise.co/en/account)
 -f, --format             output format (default: yml)
 -o, --output-folder      output folder (default: current folder; will be created if
                          doesnt exist)

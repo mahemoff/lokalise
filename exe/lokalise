@@ -9,7 +9,7 @@ e.g.: lokalize.rb --token aab14314 -output-folder=translations 1234567e0.0129
 
 Download string files from Lokalize projects, for more information
 DESC
-  o.string '-t', '--token', 'API token (default: LOKALISE_API_TOKEN env variable; from: https://lokali.se/en/account)'
+  o.string '-t', '--token', 'API token (default: LOKALISE_API_TOKEN env variable; from: https://lokalise.co/en/account)'
   o.string '-f', '--format', 'output format (default: yml)', default: :yml
   o.string '-o', '--output-folder', 'output folder (default: current folder; will be created if doesn''t exist)'
   o.string '-st', '--structure', 'output structure (default: \'%PROJECT_NAME%.%LANG_ISO%.%FORMAT%\')'

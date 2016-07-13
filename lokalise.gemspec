@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Michael Mahemoff', 'Eden Vicary']
   spec.email         = ['michael@mahemoff.com']
 
-  spec.summary       = 'Pull Lokali.se translations'
-  spec.description   = 'Download translation files from the Lokali.se'
+  spec.summary       = 'Pull Lokalise translations'
+  spec.description   = 'Download translation files from the Lokalise'
   spec.homepage      = 'https://github.com/mahemoff/lokalise'
   spec.license       = 'MIT'
 
