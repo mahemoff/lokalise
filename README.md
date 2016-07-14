@@ -22,7 +22,7 @@ Or install it yourself as:
 
 # Typical usage - mandatory project ID and auth token (which can also be in
   environment variable; get your token from https://lokalise.co/account)
-> bundle exec lokalize --token aab14314 1234567e0.0129
+> bundle exec lokalise --token aab14314 1234567e0.0129
 
 Options:
 -t, --token              API token (default: LOKALISE_API_TOKEN env variable; from:
