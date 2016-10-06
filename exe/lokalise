@@ -17,6 +17,7 @@ DESC
   o.boolean '-l', '--language-fallback', 'ensure non-dialect fallback exists for all dialects'
   o.boolean '-v', '--verbose', 'add logging'
   o.boolean '-q', '--quiet', 'no output - suppress showing new files'
+  o.boolean '-y', '--yaml-include-root', 'include language ISO code as root key in YAML export'
   o.on '-h', '--help', 'help' do ; puts opts && exit ; end
 end
 
@@ -31,6 +32,7 @@ if project_id = ARGV[0]
     language_fallback: opts['language-fallback'],
     verbose: opts['verbose'],
     quiet: opts['quiet'],
+    yaml_include_root: opts['yaml-include-root'],
     allow_overwrite: true
   ).download project_id
 else
