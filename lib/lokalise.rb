@@ -35,6 +35,7 @@ module Lokalise
     property :language_fallback
     property :quiet
     property :verbose
+    property :yaml_include_root
 
     def initialize(options)
       options[:lokalise_api_token] ||= ENV['LOKALISE_API_TOKEN']
@@ -70,7 +71,8 @@ module Lokalise
           use_original: '0',
           filter: 'translated',
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
-          bundle_structure: self.structure
+          bundle_structure: self.structure,
+          yaml_include_root: boolean_to_binary[yaml_include_root]
       )
 
       fetch_start = Time.now
@@ -186,6 +188,13 @@ module Lokalise
 
     def error_log(s)
       puts "ERROR: #{s}"
+    end
+
+    def boolean_to_binary
+      {
+        true => 1,
+        false => 0
+      }
     end
   end
 end
