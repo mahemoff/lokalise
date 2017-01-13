@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'byebug', '>= 8.2'
   spec.add_runtime_dependency 'excon', '~> 0.40'
   spec.add_runtime_dependency 'hashie', '~> 2'
-  spec.add_runtime_dependency 'json', '~> 1.8'
+  spec.add_runtime_dependency 'json', '~> 2.0'
   spec.add_runtime_dependency 'rubyzip', '~> 1.0'
   spec.add_runtime_dependency 'slop', '~> 4.0'
 end
