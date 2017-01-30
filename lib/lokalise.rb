@@ -97,7 +97,7 @@ module Lokalise
     end
 
     def download_zip
-      zip_url_on_server = "https://lokalise.co/#{@zip_path_on_server}"
+      zip_url_on_server = "https://s3-eu-west-1.amazonaws.com/lokalise-assets/#{@zip_path_on_server}"
       log "Downloading zip file from #{zip_url_on_server}"
       `curl --silent #{zip_url_on_server} > #{ZIP_FILE}`
     end
