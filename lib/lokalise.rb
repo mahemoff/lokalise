@@ -11,7 +11,7 @@ require "lokalise/version"
 #
 # (This should become a gem later on)
 
-%w(rubygems excon hashie json zip slop byebug).each { |gem| require gem }
+%w(rubygems excon hashie json zip slop).each { |gem| require gem }
 
 ######################################################################
 # USING FROM COMMAND LINE
