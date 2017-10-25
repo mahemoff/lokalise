@@ -73,9 +73,10 @@ module Lokalise
           filter: 'translated',
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
           bundle_structure: self.structure,
-          export_empty: "empty",
+          export_empty: self.export_empty,
           yaml_include_root: boolean_to_binary[yaml_include_root]
       )
+      p body.pretty_inspect
 
       fetch_start = Time.now
       response = Excon.post 'https://lokalise.co/api/project/export',
