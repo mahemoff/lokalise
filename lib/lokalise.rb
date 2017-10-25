@@ -35,7 +35,7 @@ module Lokalise
     property :language_fallback
     property :quiet
     property :verbose
-    property :filter, default 'translated'
+    property :filter, default: 'translated'
     property :yaml_include_root
     property :export_empty, default: 'skip'
 
