@@ -73,7 +73,7 @@ module Lokalise
           filter: 'translated',
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
           bundle_structure: self.structure,
-          export_empty: self.export_empty,
+          export_empty: "empty",
           yaml_include_root: boolean_to_binary[yaml_include_root]
       )
 
