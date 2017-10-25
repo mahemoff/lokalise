@@ -36,6 +36,7 @@ module Lokalise
     property :quiet
     property :verbose
     property :yaml_include_root
+    property :fill_empty, default: 0
 
     def initialize(options)
       options[:lokalise_api_token] ||= ENV['LOKALISE_API_TOKEN']
@@ -72,6 +73,7 @@ module Lokalise
           filter: 'translated',
           bundle_filename: '%PROJECT_NAME%-Locale.zip',
           bundle_structure: self.structure,
+          fill_empty: self.fill_empty,
           yaml_include_root: boolean_to_binary[yaml_include_root]
       )
 
