@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "lokalise"
+require "byebug"
 
 opts = Slop.parse do |o|
   o.banner = <<DESC.chop
@@ -23,18 +24,19 @@ end
 
 ARGV.replace opts.arguments
 if project_id = ARGV[0]
-  Lokalise::Pull.new(
+  args = {
     lokalise_api_token: opts[:token],
-    output_format: opts[:format],
     output_folder: opts['output-folder'],
-    structure: opts['structure'],
     strip: opts['strip'],
     language_fallback: opts['language-fallback'],
     verbose: opts['verbose'],
     quiet: opts['quiet'],
     yaml_include_root: opts['yaml-include-root'],
     allow_overwrite: true
-  ).download project_id
+  }
+  args[:output_format] = opts[:format] if opts[:format]
+  args[:structure] = opts['structure'] if opts[:structure]
+  Lokalise::Pull.new(args).download project_id
 else
   puts(opts)
 end
