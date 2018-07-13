@@ -1,5 +1,10 @@
+# LOKALISE - THIS PROJECT IS NO LONGER MAINTAINED (July, 2018)
+
+There's now an official Lokalise command-line tool 🎉 making this project redundant. Thanks to all who contributed. Party on.
+
 # Lokalise
 
+(NO LONGER MAINTAINED)
 Download your translation files from the [Lokalise](https://lokalise.co)
 translation service. Use as a command-line tool (e.g. from a Bash script) or as
 a Ruby class.
